@@ -2,6 +2,7 @@ from aoc import *
 
 data = ints(read_lines(1))
 
+
 def first():
     incr = 0
     for ind, num in enumerate(data):
@@ -12,11 +13,12 @@ def first():
 
     print(incr)
 
+
 incr = 0
 prev_window = 0
 for ind, num in enumerate(data):
     try:
-        window = num + data[ind+1] + data[ind+2]
+        window = num + data[ind + 1] + data[ind + 2]
     except IndexError:
         break
 

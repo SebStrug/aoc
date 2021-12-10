@@ -18,20 +18,22 @@ RAW_TEST = """7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,
 22 11 13  6  5
  2  0 12  3  7"""
 
-with open('input_4.txt', 'r') as f:
+with open("input_4.txt", "r") as f:
     RAW = f.read()
 
-data = RAW.split('\n')
-numbers = [int(n) for n in data[0].split(',')]
+data = RAW.split("\n")
+numbers = [int(n) for n in data[0].split(",")]
 boards = []
 for line in data[1:-1]:
-    if line == '':
+    if line == "":
         board = []
         boards.append(board)
     else:
         board.append([int(num) for num in line.split()])
 
 import pandas as pd
+
+
 def check_bingo(df: pd.DataFrame) -> bool:
     for i in range(5):
         if (df.iloc[i] == -1).all():
@@ -40,15 +42,15 @@ def check_bingo(df: pd.DataFrame) -> bool:
             return True
     return False
 
+
 df_boards = [pd.DataFrame(board) for board in boards]
 boards_won = {ind: -1 for ind, _ in enumerate(df_boards)}
 for n in numbers:
     for ind, df in enumerate(df_boards):
-        df[df==n] = -1
+        df[df == n] = -1
         if check_bingo(df):
             sum_unmarked = df[df != -1].sum().sum()
             boards_won[ind] = n * sum_unmarked
         if all(v != -1 for v in boards_won.values()):
             print(n * sum_unmarked)
             raise SystemExit
-
