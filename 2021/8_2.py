@@ -25,12 +25,16 @@ data = RAW.split("\n")
 # six has all the number that five does and is length 6
 # zero is the one left over
 
+
 def contains_num(num: str, contains: str, num_match: int) -> bool:
-    return num_match == len(list(filter(lambda x: x is True, (char in num for char in contains))))
+    return num_match == len(
+        list(filter(lambda x: x is True, (char in num for char in contains)))
+    )
+
 
 def solve_line(line) -> int:
     line_map = {}
-    digit_strings = [d for d in line.split(' ') if d != '|']
+    digit_strings = [d for d in line.split(" ") if d != "|"]
     for digit_str in digit_strings:
         if len(digit_str) == 2:
             line_map[1] = digit_str
@@ -42,8 +46,8 @@ def solve_line(line) -> int:
             line_map[8] = digit_str
 
     # while our line map doesn't yet have all the values
-    signal, output = line.split('|')
-    signal = signal.strip().split(' ')
+    signal, output = line.split("|")
+    signal = signal.strip().split(" ")
     while len(signal) != len(line_map.values()):
         for digit in digit_strings:
             if len(digit) == 5:
@@ -61,14 +65,15 @@ def solve_line(line) -> int:
                 else:
                     line_map[6] = digit
 
-    output_str = ''
-    for output_ in output.strip().split(' '):
+    output_str = ""
+    for output_ in output.strip().split(" "):
         for k in line_map.keys():
             if len(output_) == len(line_map[k]):
                 if contains_num(output_, line_map[k], len(output_)):
                     output_str += str(k)
 
     return int(output_str)
+
 
 score = 0
 for line in data:

@@ -68,6 +68,7 @@ def get_first_closing(line: str) -> Optional[str]:
             return char
     return None
 
+
 good_lines = []
 for line in data:
     line_ = clean_line_full(line)
@@ -78,6 +79,7 @@ for line in data:
 
 autocomplete_score = {")": 1, "]": 2, "}": 3, ">": 4}
 
+
 def get_line_score(line: str) -> int:
     line_score = 0
     line_ = clean_line_full(line)
@@ -86,6 +88,7 @@ def get_line_score(line: str) -> int:
         line_score *= 5
         line_score += autocomplete_score[char_]
     return line_score
+
 
 lines_n_scores = []
 for line in good_lines:

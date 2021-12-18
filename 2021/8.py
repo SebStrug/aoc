@@ -31,22 +31,30 @@ data = RAW.split("\n")
 def get_one(line):
     return next(i for i in line if len(i) == 2)
 
+
 is_one = lambda x: len(x) == 2
+
 
 def get_four(line):
     return next(i for i in line if len(i) == 4)
 
+
 is_four = lambda x: len(x) == 4
+
 
 def get_seven(line):
     return next(i for i in line if len(i) == 3)
 
+
 is_seven = lambda x: len(x) == 3
+
 
 def get_eight(line):
     return next(i for i in line if len(i) == 7)
 
+
 is_eight = lambda x: len(x) == 7
+
 
 def get_three(line, one: str):
     threes = [i for i in line if len(i) == 5 and all(one_i in i for one_i in one)]

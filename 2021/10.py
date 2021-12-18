@@ -67,6 +67,7 @@ def get_first_closing(line: str) -> Optional[str]:
             return char
     return None
 
+
 score = 0
 for line in data:
     line_ = clean_line_full(line)
