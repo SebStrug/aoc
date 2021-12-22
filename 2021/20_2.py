@@ -56,11 +56,12 @@ def enhance_image(image: list[str], enhance_line: str, char: str) -> list[str]:
         total.append(row)
     return total
 
-for char in ('.', '#'):
+for ind in range(50):
+    if ind % 2 == 0:
+        char = '.'
+    else:
+        char = '#'
     image = enhance_image(image, enhance_line, char)
-    for line in image:
-        print(line)
-    print()
 
 num_lit = 0
 for line in image:
