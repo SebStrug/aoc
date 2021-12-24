@@ -1,3 +1,5 @@
+import io
+
 hex_to_bin_map = {
     "0": "0000",
     "1": "0001",
@@ -24,43 +26,41 @@ def hex_to_bin(hex_str: str) -> str:
         bin_str += hex_to_bin_map[char]
     return bin_str
 
+def process_literal(literal: io.StringIO):
+    total = ''
+    while True:
+        chunk = literal.read(5)
+        if len(chunk) < 5:
+            break
+        total += chunk[1:]
+    return int(total, 2)
 
-def get_version(packet: str) -> int:
-    """The packet version is the decimal repr of the
-    first three bits"""
-    return int(packet[:3], 2)
+def read_packet(packet: io.StringIO):
+    version_str = packet.read(3)
+    if version_str == '':
+        return
+    version = int(version_str, 2)
+    print(f'{version=}')
 
-
-def get_type(packet: str) -> int:
-    """The packet type ID the decimal rep of the
-    three bits after the packet version"""
-    return int(packet[3:6], 2)
-
-
-packet = hex_to_bin("38006F45291200")
-
-total_versions = get_version(packet)
-
-
-def process_packet(packet: str):
-    print(get_version(packet))
-    if get_type(packet) == 4:
+    packet_type = int(packet.read(3), 2)
+    print(f'{packet_type=}')
+    if packet_type == 4:
         # literal packet
-        literal_packet = packet[6:]
-        chunks = [
-            literal_packet[i : i + 5]
-            for i in range(0, len(literal_packet), 5)
-            if len(literal_packet[i : i + 5]) == 5
-        ]
+        literal = process_literal(packet)
+        print(f'{literal=}')
+        return read_packet(packet)
     else:
         # operator packet
-        if packet[6] == "0":
-            # total length ID
-            total_length = int(packet[7:22], 2)
-            # HOW DO WE SPLIT UP INTO SUBPACKETS?
-        elif packet[7] == "1":
-            # sub-packet ID
-            num_sub_packets = int(packet[7:18], 2)
+        length_type = packet.read(1)
+        print(f'{length_type=}')
+        if length_type == '0':
+            # length type ID
+            length = int(packet.read(15), 2)
+            return read_packet(io.StringIO(packet.read(length)))
+        elif length_type == '1':
+            sub_packets = int(packet.read(11), 2)
+            return read_packet(io.StringIO(packet.read()))
 
-        else:
-            raise ValueError("Packet length ID not 1 or 0")
+packet_str = hex_to_bin("38006F45291200")
+packet = io.StringIO(packet_str)
+print(read_packet(packet))
