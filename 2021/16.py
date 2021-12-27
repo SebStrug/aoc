@@ -1,5 +1,3 @@
-import io
-
 hex_to_bin_map = {
     "0": "0000",
     "1": "0001",
@@ -19,6 +17,8 @@ hex_to_bin_map = {
     "F": "1111",
 }
 
+with open('input_16.txt', 'r') as f:
+    RAW = f.read().strip()
 
 def hex_to_bin(hex_str: str) -> str:
     bin_str = ""
@@ -26,41 +26,53 @@ def hex_to_bin(hex_str: str) -> str:
         bin_str += hex_to_bin_map[char]
     return bin_str
 
-def process_literal(literal: io.StringIO):
+def read_literal(data: str) -> int:
     total = ''
     while True:
-        chunk = literal.read(5)
-        if len(chunk) < 5:
+        total += data[1:5]
+        if data[0] == '0':
             break
-        total += chunk[1:]
+        data = data[5:]
     return int(total, 2)
 
-def read_packet(packet: io.StringIO):
-    version_str = packet.read(3)
-    if version_str == '':
-        return
-    version = int(version_str, 2)
-    print(f'{version=}')
 
-    packet_type = int(packet.read(3), 2)
-    print(f'{packet_type=}')
-    if packet_type == 4:
-        # literal packet
-        literal = process_literal(packet)
-        print(f'{literal=}')
-        return read_packet(packet)
+
+total_version = 0
+
+def read(data: str) -> str:
+    global total_version
+    total_version += int(data[:3], 2)
+    data = data[3:]
+
+    type_id = int(data[:3], 2)
+    data = data[3:]
+    if type_id == 4:
+        total = ''
+        while True:
+            total += data[1:5]
+            padding = data[0]
+            data = data[5:]
+            if padding == '0':
+                break
     else:
-        # operator packet
-        length_type = packet.read(1)
-        print(f'{length_type=}')
-        if length_type == '0':
-            # length type ID
-            length = int(packet.read(15), 2)
-            return read_packet(io.StringIO(packet.read(length)))
-        elif length_type == '1':
-            sub_packets = int(packet.read(11), 2)
-            return read_packet(io.StringIO(packet.read()))
+        length_type_id = data[0]
+        data = data[1:]
+        if length_type_id == '0':
+            total_length = int(data[:15], 2)
+            data = data[15:]
+            sub_packets = read(data[:total_length])
+            while sub_packets:
+                sub_packets = read(sub_packets)
+            data = data[total_length:]
 
-packet_str = hex_to_bin("38006F45291200")
-packet = io.StringIO(packet_str)
-print(read_packet(packet))
+        elif length_type_id == '1':
+            num_packets = int(data[:11], 2)
+            data = data[11:]
+            for _ in range(num_packets):
+                data = read(data)
+    return data
+
+
+packet = hex_to_bin(RAW)
+read(packet)
+print(total_version)
