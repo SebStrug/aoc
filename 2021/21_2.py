@@ -4,33 +4,34 @@ Player 2 starting position: 8"""
 RAW = """Player 1 starting position: 8
 Player 2 starting position: 10"""
 
-from functools import lru_cache
+from functools import cache
+from collections import Counter
+from itertools import product
 
-spaces = [4, 8]
-scores = [0, 0]
-die = 0
-rolls = 0
 
 def my_mod(num: int, mod: int) -> int:
     """Modulo to 1 not 0"""
-    return (num- 1) % mod + 1
+    return (num - 1) % mod + 1
 
-@lru_cache()
-def play_game(spaces, scores, die, rolls) -> int:
-    player_ind = 0
-    while True:
-        die += 1
-        die = my_mod(die, 100)
 
-        rolls += 1
-        spaces[player_ind] += die
-        if rolls % 3 == 0:
-            spaces[player_ind] = my_mod(spaces[player_ind], 10)
+# Get the distribution of sums of rolling three times (1, 2, or 3)
+distrib = Counter(sum(r) for r in product((1, 2, 3), repeat=3))
+moves, odds = distrib.keys(), distrib.values()
 
-            scores[player_ind] += spaces[player_ind]
-            print(f'{spaces=}, {scores=}, {die=}, {rolls=}')
-            if any(s >= 21 for s in scores):
-                # return the ind
-                return player_ind
-            player_ind = (player_ind + 1) % 2
-    
+
+@cache
+def game(pos1: int, pos2: int, score1: int = 0, score2: int = 0) -> tuple[int, int]:
+    if score2 >= 21:
+        # Add a win to the second player
+        return 0, 1
+
+    wins1, wins2 = 0, 0
+    for move, odd in zip(moves, odds):
+        pos1_ = my_mod(pos1 + move, 10)
+        # Swap positions to play the other player's moves
+        w2, w1 = game(pos2, pos1_, score2, score1 + pos1_)
+        wins1, wins2 = wins1 + (odd * w1), wins2 + (odd * w2)
+    return wins1, wins2
+
+
+print(max(game(8, 10)))

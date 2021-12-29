@@ -6,8 +6,10 @@ data_x, data_y = (20, 30), (-10, -5)
 data = "x=156..202, y=-110..-69"
 data_x, data_y = (156, 202), (-110, -69)
 
+
 def step_y(y: int, vel_y: int) -> tuple[int, int]:
-    return y + vel_y, vel_y -1
+    return y + vel_y, vel_y - 1
+
 
 max_steps = 1_000
 
@@ -21,7 +23,7 @@ for vel_y in range(1, 200):
             good_ys.append(original_vel_y)
             break
 
-vel_y = max(good_ys) # 48
+vel_y = max(good_ys)  # 48
 y = 0
 highest_y = 0
 for _ in range(max_steps):

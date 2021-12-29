@@ -15,8 +15,9 @@ with open("input_15.txt", "r") as f:
 
 data = [[int(num) for num in line] for line in RAW.splitlines()]
 
+
 def get_neighbours(x: int, y: int) -> list[tuple[int, int]]:
-    possible_neighbours = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+    possible_neighbours = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
     neighbours = []
     for n in possible_neighbours:
         x_, y_ = n
@@ -25,17 +26,23 @@ def get_neighbours(x: int, y: int) -> list[tuple[int, int]]:
         neighbours.append(n)
     return neighbours
 
-def get_smallest(distances: list[list[int]], unvisited: set[tuple[int, int]]) -> tuple[tuple[int, int], int]:
+
+def get_smallest(
+    distances: list[list[int]], unvisited: set[tuple[int, int]]
+) -> tuple[tuple[int, int], int]:
     """Return (distance indices, distance) of unvisited node with smallest distance"""
     d = {inds: distances[inds[0]][inds[1]] for inds in unvisited}
     return list(sorted(d.items(), key=lambda x: x[1]))[0]
 
-unvisited: set[tuple[int, int]] = {(i, j) for i in range(len(data)) for j in range(len(data[0]))}
+
+unvisited: set[tuple[int, int]] = {
+    (i, j) for i in range(len(data)) for j in range(len(data[0]))
+}
 # use None for infinity
-distances = [[float('inf') for _ in num_line] for num_line in data]
+distances = [[float("inf") for _ in num_line] for num_line in data]
 distances[0][0] = 0
 
-current = (0,0)
+current = (0, 0)
 current_val = 0
 while True:
     neighbours = get_neighbours(*current)

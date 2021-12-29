@@ -40,7 +40,7 @@ start-RW"""
 
 from collections import defaultdict
 
-with open('input_12.txt', 'r') as f:
+with open("input_12.txt", "r") as f:
     RAW = f.read()
 
 data = tuple(RAW.splitlines())
@@ -48,26 +48,26 @@ data = tuple(RAW.splitlines())
 # dictionary mapping each path to another is key
 paths = defaultdict(list)
 for p in data:
-    p_1, p_2 = p.split('-')
+    p_1, p_2 = p.split("-")
     paths[p_1].append(p_2)
     paths[p_2].append(p_1)
 
 # visited only needs to keep track of lowercase nodes
 def path(current: str, visited: set[str], twice: bool):
     if current.islower():
-        visited |= {current} 
-    
+        visited |= {current}
+
     num_paths = 0
     for n in paths[current]:
-        if n == 'end':
+        if n == "end":
             num_paths += 1
-        elif n != 'start':
+        elif n != "start":
             if n not in visited:
                 num_paths += path(n, visited, twice)
             elif not twice:
                 num_paths += path(n, visited, True)
     return num_paths
 
+
 # frozenset is key for immutability
-print(path('start', frozenset(), False))
-    
+print(path("start", frozenset(), False))

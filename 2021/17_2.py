@@ -6,8 +6,10 @@ data_x, data_y = (20, 30), (-10, -5)
 data = "x=156..202, y=-110..-69"
 data_x, data_y = (156, 202), (-110, -69)
 
+
 def step_y(y: int, vel_y: int) -> tuple[int, int]:
     return y + vel_y, vel_y - 1
+
 
 def step_x(x: int, vel_x: int) -> tuple[int, int]:
     x += vel_x
@@ -15,7 +17,8 @@ def step_x(x: int, vel_x: int) -> tuple[int, int]:
         vel_x += 1
     elif vel_x > 0:
         vel_x -= 1
-    return x, vel_x        
+    return x, vel_x
+
 
 max_steps = 1_000
 
@@ -40,6 +43,7 @@ for vel_y in range(-200, 300):
             break
 
 import itertools
+
 valid_perms = 0
 for vel_x, vel_y in itertools.product(valid_x, valid_y):
     x, y = 0, 0

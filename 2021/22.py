@@ -26,7 +26,7 @@ on x=-41..9,y=-7..43,z=-33..15
 on x=-54112..-39298,y=-85059..-49293,z=-27449..7877
 on x=967..23432,y=45373..81175,z=27513..53682"""
 
-with open('input_22.txt', 'r') as f:
+with open("input_22.txt", "r") as f:
     RAW = f.read()
 
 from itertools import product
@@ -35,28 +35,30 @@ data = RAW.splitlines()
 
 all_perms: set[tuple[int, int, int]] = set()
 
+
 def step(all_perms: set[tuple[int, int, int]], line: str) -> set[tuple[int, int, int]]:
-    on, coords = line.split(' ')
-    x, y, z = coords.split(',')
+    on, coords = line.split(" ")
+    x, y, z = coords.split(",")
     all = []
     for var in (x, y, z):
         all_var = []
-        low, high = var.split('..')
-        low = int(low.split('=')[1])
+        low, high = var.split("..")
+        low = int(low.split("=")[1])
         high = int(high)
         if low < -50 or high > 50:
             return all_perms
         all_var.extend([i for i in range(low, high + 1)])
         all.append(all_var)
     for elem in product(*all):
-        if on == 'on':
+        if on == "on":
             all_perms.add(elem)
-        elif on == 'off':
+        elif on == "off":
             try:
                 all_perms.remove(elem)
             except KeyError:
                 pass
     return all_perms
+
 
 for line in data:
     all_perms = step(all_perms, line)

@@ -15,11 +15,12 @@ RAW_TEST = """[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
 [[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
 [[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]""".splitlines()
 
-with open('input_18.txt', 'r') as f:
+with open("input_18.txt", "r") as f:
     RAW = f.read().splitlines()
 
-SnailNumT = Union[int, tuple['SnailNumT', 'SnailNumT']]
+SnailNumT = Union[int, tuple["SnailNumT", "SnailNumT"]]
 data = list(map(json.loads, RAW))
+
 
 def magnitude(x: SnailNumT) -> int:
     """Recursive solution for magnitude
@@ -34,7 +35,7 @@ def magnitude(x: SnailNumT) -> int:
 
 def add_left(x: SnailNumT, n: int):
     """Recursive function used to explode a snail number leftwise
-    
+
     Args:
         x: Snail number
         n: Number to add
@@ -48,10 +49,10 @@ def add_left(x: SnailNumT, n: int):
 
 def add_right(x, n):
     """Recursive function used to explode a snail number rightwise
-    
+
     Args:
         x: Snail number
-        n: Number to add    
+        n: Number to add
     """
     if n is None:
         return x
@@ -62,14 +63,14 @@ def add_right(x, n):
 
 def explode(x: SnailNumT, n=4):
     """Explode a number
-    
+
     Args:
         x: Snail number
         n: nesting, keep track of levels, only explode at 4
 
     Returns:
         - boolean if true
-        - resulting left snail number, None if 
+        - resulting left snail number, None if
         - central value, 0 if at the nesting level
         - resulting right snail number
     """
@@ -89,14 +90,14 @@ def explode(x: SnailNumT, n=4):
 
 def split(x: SnailNumT) -> tuple[bool, SnailNumT]:
     """Split a snail number
-    
+
     Returns:
         boolean - true if there was a split
         snail number
     """
     if isinstance(x, int):
         if x >= 10:
-            return True, [floor(x/2), ceil(x/2)]
+            return True, [floor(x / 2), ceil(x / 2)]
         return False, x
     # recursively split left/right
     a, b = x
@@ -118,6 +119,7 @@ def add(a, b):
         if not change:
             break
     return x
+
 
 print(magnitude(reduce(add, data)))
 

@@ -23,8 +23,10 @@ for line in data:
         num_line.append(int(char))
     nums.append(num_line)
 
+
 def incr_energies(nums: list[list[int]]) -> list[list[int]]:
     return [[num + 1 for num in num_line] for num_line in nums]
+
 
 def get_adj(x: int, y: int) -> list[tuple[int, int]]:
     adjs = []
@@ -36,7 +38,7 @@ def get_adj(x: int, y: int) -> list[tuple[int, int]]:
             x_ = x + i
             y_ = y + j
             # no negative indexing
-            if x_ < 0 or y_ < 0: 
+            if x_ < 0 or y_ < 0:
                 continue
             # don't go out of bounds
             if x_ == len(nums) or y_ == len(nums):
@@ -44,12 +46,16 @@ def get_adj(x: int, y: int) -> list[tuple[int, int]]:
             adjs.append((x_, y_))
     return adjs
 
-def get_flasher(nums: list[list[int]], has_flashed: set[tuple[int, int]]) -> Optional[tuple[int, int]]:
+
+def get_flasher(
+    nums: list[list[int]], has_flashed: set[tuple[int, int]]
+) -> Optional[tuple[int, int]]:
     for row in range(len(nums)):
         for col in range(len(nums[row])):
             if nums[row][col] > 9 and (row, col) not in has_flashed:
                 return (row, col)
     return None
+
 
 def step(nums: list[list[int]]) -> tuple[list[list[int]], int]:
     nums = incr_energies(nums)
@@ -65,10 +71,11 @@ def step(nums: list[list[int]]) -> tuple[list[list[int]], int]:
         for adj in adjacents:
             if adj not in has_flashed:
                 nums[adj[0]][adj[1]] += 1
-    
+
     for point in has_flashed:
         nums[point[0]][point[1]] = 0
     return nums, len(has_flashed)
+
 
 total_flashes = 0
 for step_num in range(100):

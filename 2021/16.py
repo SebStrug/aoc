@@ -17,8 +17,9 @@ hex_to_bin_map = {
     "F": "1111",
 }
 
-with open('input_16.txt', 'r') as f:
+with open("input_16.txt", "r") as f:
     RAW = f.read().strip()
+
 
 def hex_to_bin(hex_str: str) -> str:
     bin_str = ""
@@ -26,18 +27,19 @@ def hex_to_bin(hex_str: str) -> str:
         bin_str += hex_to_bin_map[char]
     return bin_str
 
+
 def read_literal(data: str) -> int:
-    total = ''
+    total = ""
     while True:
         total += data[1:5]
-        if data[0] == '0':
+        if data[0] == "0":
             break
         data = data[5:]
     return int(total, 2)
 
 
-
 total_version = 0
+
 
 def read(data: str) -> str:
     global total_version
@@ -47,17 +49,17 @@ def read(data: str) -> str:
     type_id = int(data[:3], 2)
     data = data[3:]
     if type_id == 4:
-        total = ''
+        total = ""
         while True:
             total += data[1:5]
             padding = data[0]
             data = data[5:]
-            if padding == '0':
+            if padding == "0":
                 break
     else:
         length_type_id = data[0]
         data = data[1:]
-        if length_type_id == '0':
+        if length_type_id == "0":
             total_length = int(data[:15], 2)
             data = data[15:]
             sub_packets = read(data[:total_length])
@@ -65,7 +67,7 @@ def read(data: str) -> str:
                 sub_packets = read(sub_packets)
             data = data[total_length:]
 
-        elif length_type_id == '1':
+        elif length_type_id == "1":
             num_packets = int(data[:11], 2)
             data = data[11:]
             for _ in range(num_packets):
