@@ -1,0 +1,59 @@
+z.push(A + 14)
+
+z.push(B + 2)
+
+z.push(C + 1)
+
+z.push(D + 13)
+
+z.push(E + 5)
+
+if F != z.pop() - 12:
+    z.push(F + 5)
+
+if G != z.pop() - 12:
+    z.push(G + 5)
+
+z.push(H + 9)
+
+if I != z.pop() - 7:
+    z.push(I + 3)
+
+z.push(J + 13)
+
+if K != z.pop() - 8:
+    z.push(K + 2)
+
+if L != z.pop() - 5:
+    z.push(L + 1)
+
+if M != z.pop() - 10:
+    z.push(M + 11)
+
+if N != z.pop() - 7:
+    z.push(N + 8)
+
+E - 7 = F
+D + 1 = G
+H + 2 = I
+J + 5 = K
+C - 4 = L
+B - 8 = M
+A + 7 = N
+
+sorted...
+A + 7 = N
+B - 8 = M
+C - 4 = L
+D + 1 = G
+E - 7 = F
+H + 2 = I
+J + 5 = K
+
+part 1
+ABCDEFGHIJKLMN
+29989297949519
+
+part 2
+ABCDEFGHIJKLMN
+19518121316118
