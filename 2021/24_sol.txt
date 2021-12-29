@@ -33,6 +33,9 @@ if M != z.pop() - 10:
 if N != z.pop() - 7:
     z.push(N + 8)
 
+Stack needs to be empty at the end, so go through each matching push/pop and don't allow
+the conditional push to happen
+
 E - 7 = F
 D + 1 = G
 H + 2 = I
