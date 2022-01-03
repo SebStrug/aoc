@@ -205,3 +205,7 @@ all_beacons = []
 for s in good_scanners:
     all_beacons.extend(s.beacons)
 print(len(set(all_beacons)))
+
+from itertools import combinations
+all_combos = list(combinations((s.scanner_position for s in good_scanners), 2))
+dists = [a.get_manhattan_dist(b) for a,b in all_combos]
