@@ -1,4 +1,6 @@
+from collections import defaultdict
 from typing import Optional
+import numpy as np
 
 with open("input_19.txt", "r") as f:
     RAW = f.read()
@@ -23,12 +25,65 @@ class Beacon:
         """Calculate the Manhattan distance between one point and another"""
         return abs(self.x - other.x) + abs(self.y - other.y) + abs(self.z - other.z)
 
+    def __sub__(self, other: "Beacon") -> "Beacon":
+        return Beacon(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def __add__(self, other: "Beacon") -> "Beacon":
+        return Beacon(self.x + other.x, self.y + other.y, self.z + other.z)
+
     def __eq__(self, other: "Beacon") -> bool:
         return (self.x == other.x) and (self.y == other.y) and (self.z == other.z)
 
     def __hash__(self) -> int:
         return hash((self.x, self.y, self.z))
 
+    @staticmethod
+    def _apply_rotation(beacon: 'Beacon', rotation, repeats):
+        rotating_point = np.array([beacon.x, beacon.y, beacon.z])
+        for _ in range(repeats):
+            rotating_point = rotating_point * rotation
+            rotating_point = np.squeeze(np.asarray(rotating_point))
+
+        return Beacon(rotating_point[0], rotating_point[1], rotating_point[2])    
+
+    def rotate(self, x: int, y: int, z: int):
+        """https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
+        Using the above formulas setting theta to 90deg.
+        """
+        rotate_x_transform = np.matrix([
+            [1, 0, 0],
+            [0, 0 ,-1],
+            [ 0, 1, 0]
+        ])
+
+        rotate_y_transform = np.matrix([
+            [0, 0, 1],
+            [0, 1, 0],
+            [-1, 0, 0]
+        ])
+
+        rotate_z_transform = np.matrix([
+            [0, -1, 0],
+            [1, 0, 0],
+            [0, 0, 1]
+        ])
+
+        new_point = self._apply_rotation(self, rotate_x_transform, x)
+        new_point = self._apply_rotation(new_point, rotate_y_transform, y)
+        new_point = self._apply_rotation(new_point, rotate_z_transform, z)
+        return new_point  
+
+    def get_rotations(self):
+        rots = []
+        for x in range(4):
+            for y in range(4):
+                for z in range(4):
+                    rots.append(self.rotate(x, y, z))
+        # uniquify from 64 to 24
+        return list(set(rots))
+
+    def to_tuple(self) -> tuple[int, int, int]:
+        return (self.x, self.y, self.z)
 
 class Scanner:
     def __init__(self, num: int, beacons: list[Beacon]) -> None:
@@ -90,3 +145,11 @@ def parse_input(input: str) -> list[Scanner]:
 scanners = parse_input(RAW_TEST)
 self_b, other_b, ms = scanners[0].get_overlapping(scanners[1])
 scanners[0].relative_pos = (0, 0, 0)
+
+matches = defaultdict(int)
+for i in range(len(self_b)):
+    diffs = [self_b[i] - r for r in other_b[i].get_rotations()]
+    for d in diffs:
+        matches[d] += 1
+other_b_pos = [m for m in matches.items() if m[1] == 12][0][0]
+print(f'Other scanner position: ')
