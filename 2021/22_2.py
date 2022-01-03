@@ -109,7 +109,7 @@ class Block:
         # if off overlaps with on, add an off block <<< NOT COMMUTATIVE!
         if not self.is_on and other.is_on:
             return Block(is_on=False, x=range_x, y=range_y, z=range_z)
-        # if off overlaps with off, do nothing
+        # if off overlaps with off, add positive
         if not self.is_on and not other.is_on:
             return Block(is_on=True, x=range_x, y=range_y, z=range_z)
         return None
@@ -132,6 +132,7 @@ def step(line: str, existing_blocks: list[Block]) -> list[Block]:
     x_, y_, z_ = coords.split(",")
     block = Block(is_on=is_on_, x=split_str(x_), y=split_str(y_), z=split_str(z_))
     new_blocks = list(filter(None, (block.intersect(b) for b in existing_blocks)))
+    # only add ON cubes to the existing cubes, off cubes have nothing to add
     if block.is_on:
         new_blocks.append(block)
     return existing_blocks + new_blocks

@@ -4,7 +4,7 @@ I was a lot more motivated this year as several coworkers also took part (and sm
 Resources:
 1. https://www.reddit.com/r/adventofcode/wiki/solution_megathreads
 1. jumpertown came top of my private leaderboard. His solutions are superb, and he also writes his reasoning down. https://github.com/jumpertown/aoc/blob/master/2021/Advent%20of%20Code%202021.ipynb
-
+1. Great set of solutions from hhope https://github.com/hhoppe/advent_of_code_2021/blob/main/advent_of_code_2021.ipynb
 
 Big learnings for me this year have been:
 * Actually googling and implementing algorithms like Dijkstra's
